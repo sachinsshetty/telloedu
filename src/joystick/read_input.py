@@ -1,4 +1,4 @@
-## Source : http://www.pygame.org/docs/ref/joystick.html 
+## Source : http://www.pygame.org/docs/ref/joystick.html
 
 import pygame
 
@@ -58,13 +58,6 @@ while done==False:
         if event.type == pygame.QUIT: # If user clicked close
             done=True # Flag that we are done so we exit this loop
 
-        # Possible joystick actions: JOYAXISMOTION JOYBALLMOTION JOYBUTTONDOWN JOYBUTTONUP JOYHATMOTION
-        if event.type == pygame.JOYBUTTONDOWN:
-            print("Joystick button pressed.")
-        if event.type == pygame.JOYBUTTONUP:
-            print("Joystick button released.")
-
-
     # DRAWING STEP
     # First, clear the screen to white. Don't put other drawing commands
     # above this, or they will be erased with this command.
@@ -74,51 +67,68 @@ while done==False:
     # Get count of joysticks
     joystick_count = pygame.joystick.get_count()
 
-    textPrint.printJS(screen, "Number of joysticks: {}".format(joystick_count) )
-    textPrint.indent()
+    if(joystick_count == 1):
 
-    # For each joystick:
-    for i in range(joystick_count):
-        joystick = pygame.joystick.Joystick(i)
+        joystick = pygame.joystick.Joystick(0)
         joystick.init()
 
-        textPrint.printJS(screen, "Joystick {}".format(i) )
+        name = joystick.get_name()
+        textPrint.printJS(screen, "Joystick name: {}".format(name) )
         textPrint.indent()
 
         # Get the name from the OS for the controller/joystick
-        name = joystick.get_name()
-        textPrint.printJS(screen, "Joystick name: {}".format(name) )
 
         # Usually axis run in pairs, up/down for one, and left/right for
         # the other.
-        axes = joystick.get_numaxes()
-        textPrint.printJS(screen, "Number of axes: {}".format(axes) )
-        textPrint.indent()
 
-        for i in range( axes ):
-            axis = joystick.get_axis( i )
-            textPrint.printJS(screen, "Axis {} value: {:>6.3f}".format(i, axis) )
+        ## Raise / Lower Drone
+
+        if(joystick.get_axis( 5 ) > 0.9):
+            textPrint.printJS(screen, "Raise :")
         textPrint.unindent()
 
-        buttons = joystick.get_numbuttons()
-        textPrint.printJS(screen, "Number of buttons: {}".format(buttons) )
-        textPrint.indent()
-
-        for i in range( buttons ):
-            button = joystick.get_button( i )
-            textPrint.printJS(screen, "Button {:>2} value: {}".format(i,button) )
+        if(joystick.get_axis( 2 ) > 0.9):
+            textPrint.printJS(screen, "Lower :")
         textPrint.unindent()
 
-        # Hat switch. All or nothing for direction, not like joysticks.
-        # Value comes back in an array.
-        hats = joystick.get_numhats()
-        textPrint.printJS(screen, "Number of hats: {}".format(hats) )
-        textPrint.indent()
 
-        for i in range( hats ):
-            hat = joystick.get_hat( i )
-            textPrint.printJS(screen, "Hat {} value: {}".format(i, str(hat)) )
+        ## Move Drone
+
+        if(joystick.get_axis( 4 ) < -0.9):
+            textPrint.printJS(screen, "Move Forward :")
         textPrint.unindent()
+
+        if(joystick.get_axis( 4 ) > 0.9):
+            textPrint.printJS(screen, "Move Reverse :")
+        textPrint.unindent()
+
+        if(joystick.get_axis( 3 ) < -0.9):
+            textPrint.printJS(screen, "Move Right:")
+        textPrint.unindent()
+
+        if(joystick.get_axis( 3 ) > 0.9):
+            textPrint.printJS(screen, "Move Left :")
+        textPrint.unindent()
+
+        ## Turn Drone
+
+        if(joystick.get_axis( 0 ) < -0.9):
+            textPrint.printJS(screen, "Camera Left:")
+        textPrint.unindent()
+
+        if(joystick.get_axis( 0 ) > 0.9):
+            textPrint.printJS(screen, "Camera Right:")
+        textPrint.unindent()
+
+        ## Start / Stop Drone
+
+        if(joystick.get_button(7)== 1):
+            textPrint.printJS(screen, "Start : Take Off pressed" )
+            textPrint.indent()
+
+        if(joystick.get_button(6)== 1):
+            textPrint.printJS(screen, "Back : Land pressed" )
+            textPrint.indent()
 
         textPrint.unindent()
 
